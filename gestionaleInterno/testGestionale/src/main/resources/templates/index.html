@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EGestionale Lavoratori</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body style="max-width: 1960px; margin: 16px auto; padding: 16px">
+
+<h3>Elenco di tutti i lavoratori</h3>
+<a th:href="@{/showNewLavoratoreForm}" class="waves-effect waves-light btn">Aggiungi un nuovo Lavoratore</a>
+
+<div align="right">
+    <select class="form-control" id="dropDownList" th:field="*{listaAziende}" style="display: block">
+        <option value="0">-- Visualizza tutti i dipendenti inseriti nel gestionale --</option>
+        <option th:each="azienda : ${listaAziende}" th:value="${azienda.idAz}" th:text="${azienda.ragioneSociale}"></option>
+    </select>
+</div>
+
+<script>
+    document.getElementById("dropDownList").addEventListener("change", function () {
+        var selectedAziendaId = this.value;
+        if (selectedAziendaId === "0") {
+            location.reload();
+        } else {
+            fetch("/getLavoratoriByAzienda/" + selectedAziendaId)
+                .then(response => response.json())
+                .then(data => populateTable(data))
+                .catch(error => console.error("Error fetching data: " + error));
+        }
+    });
+
+    function populateTable(data) {
+        var tableBody = document.querySelector("#lavoratoriTable tbody");
+        tableBody.innerHTML = "";
+
+        function formatDate(dateString) {
+            if (!dateString) return "";
+            var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            var date = new Date(dateString);
+            return date.toLocaleDateString('it-IT', options);
+        }
+
+        data.forEach(function (lavoratore) {
+            var row = document.createElement("tr");
+
+            function createCell(text) {
+                var cell = document.createElement("td");
+                cell.textContent = text;
+                return cell;
+            }
+
+            var dataAssunzioneFormatted = lavoratore.dataAssunzione ? formatDate(lavoratore.dataAssunzione) : "";
+            var dataFineLavoroFormatted = formatDate(lavoratore.dataFine);
+
+            row.appendChild(createCell(lavoratore.idLav));
+            row.appendChild(createCell(lavoratore.cognome));
+            row.appendChild(createCell(lavoratore.nome));
+            row.appendChild(createCell(lavoratore.codFisc));
+            row.appendChild(createCell(lavoratore.ragioneSociale));
+            row.appendChild(createCell(lavoratore.nomeBu));
+            row.appendChild(createCell(dataAssunzioneFormatted));
+            row.appendChild(createCell(dataFineLavoroFormatted));
+            row.appendChild(createCell(lavoratore.teamLeader));
+            row.appendChild(createCell(lavoratore.manager));
+
+            var aggiornaCell = document.createElement("td");
+            var aggiornaLink = document.createElement("a");
+            aggiornaLink.setAttribute("href", "/showFormForUpdate/" + lavoratore.idLav);
+            aggiornaLink.setAttribute("class", "waves-effect waves-light btn");
+            aggiornaLink.textContent = "Aggiorna";
+            aggiornaCell.appendChild(aggiornaLink);
+            row.appendChild(aggiornaCell);
+
+            var rimuoviCell = document.createElement("td");
+            var rimuoviLink = document.createElement("a");
+            rimuoviLink.setAttribute("href", "/delete/" + lavoratore.idLav);
+            rimuoviLink.setAttribute("class", "waves-effect waves-light btn red lighten-2");
+            rimuoviLink.textContent = "Cancella";
+            rimuoviCell.appendChild(rimuoviLink);
+            row.appendChild(rimuoviCell);
+
+            tableBody.appendChild(row);
+        });
+    }
+</script>
+
+<div align="center" style="margin-top: 20px">
+
+    <table id="lavoratoriTable" class="responsive-table striped highlight centered" th:if="${not #lists.isEmpty(listaLavoratori)}">
+        <thead>
+        <tr>
+            <th>Id Lavoratore</th>
+            <th>Cognome</th>
+            <th>Nome</th>
+            <th>Codice Fiscale</th>
+            <th>Ragione Sociale</th>
+            <th>Nome Bu</th>
+            <th>Data Assunzione</th>
+            <th>Data Fine Lavoro</th>
+            <th>Codice TL</th>
+            <th>Codice Manager</th>
+            <th>Aggiorna Lavoratore</th>
+            <th>Rimuovi Lavoratore</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="lavoratore: ${listaLavoratori}">
+            <td th:text="${lavoratore.idLav}"></td>
+            <td th:text="${lavoratore.cognome}"></td>
+            <td th:text="${lavoratore.nome}"></td>
+            <td th:text="${lavoratore.codFisc}"></td>
+            <td th:text="${lavoratore.ragioneSociale}"></td>
+            <td th:text="${lavoratore.nomeBu}"></td>
+            <td>
+                <span th:text="${#dates.format(lavoratore.dataAssunzione, 'dd/MM/yyyy')}"></span>
+            </td>
+            <td>
+                <span th:text="${#dates.format(lavoratore.dataFine, 'dd/MM/yyyy')}"></span>
+            </td>
+            <td th:text="${lavoratore.teamLeader}"></td>
+            <td th:text="${lavoratore.manager}"></td>
+            <td>
+
+                <a th:href="@{/showFormForUpdate/{id}(id=${lavoratore.idLav})}"
+                   class="waves-effect waves-light btn">Aggiorna</a>
+            </td>
+            <td>
+
+                <a th:href="@{/delete/{id}(id=${lavoratore.idLav})}"
+                   class="waves-effect waves-light btn red litghten-2">Cancella</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+
+

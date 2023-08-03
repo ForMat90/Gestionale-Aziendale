@@ -1,0 +1,133 @@
+Per creare il database e popolarlo, segui questi passi:
+
+1. Assicurati di avere PostgreSQL installato e in esecuzione sul tuo sistema.
+
+2. Utilizzando un client di PostgreSQL o l'interfaccia della riga di comando psql, crea un nuovo database per il tuo gestionale con questo comando:
+
+CREATE DATABASE nome_database;
+
+3. Dopo aver creato il database, connettiti ad esso usando il comando psql o un client grafico.
+
+4. Copia ed esegui le query di creazione delle tabelle fornite sotto, una dopo l'altra.
+
+5. Copia ed esegui le query di inserimento dei dati casuali nelle tabelle fornite sotto, una dopo l'altra.
+
+Ora il database è stato creato e popolato con dati!
+
+                                            CREAZIONE TABELLE IN POSTGRES
+
+CREATE TABLE tabelle_gestionale.aziende (
+	id_az serial4 NOT NULL,
+	ragione_sociale varchar(150) NOT NULL,
+	citta varchar(50) NOT NULL,
+	indirizzo varchar(255) NOT NULL,
+	p_iva varchar(11) NOT NULL,
+	CONSTRAINT aziende_p_iva_key UNIQUE (p_iva),
+	CONSTRAINT aziende_pkey PRIMARY KEY (id_az)
+);
+
+CREATE TABLE tabelle_gestionale.bu (
+	id_bu serial4 NOT NULL,
+	nome varchar(150) NOT NULL,
+	cod_resp int4 NOT NULL,
+	CONSTRAINT bu_pkey PRIMARY KEY (id_bu)
+);
+
+CREATE TABLE tabelle_gestionale.commesse (
+	id_comm serial4 NOT NULL,
+	nome_prog varchar(150) NOT NULL,
+	committente varchar(50) NOT NULL,
+	CONSTRAINT commesse_pkey PRIMARY KEY (id_comm)
+);
+
+CREATE TABLE tabelle_gestionale.lavoratori (
+	id_lav serial4 NOT NULL,
+	cognome varchar(150) NOT NULL,
+	nome varchar(150) NOT NULL,
+	id_az int4 NOT NULL,
+	id_bu int4 NULL,
+	cod_fisc varchar(16) NOT NULL,
+	data_assunzione date NOT NULL,
+	data_fine date NULL,
+	cod_tl int4 NULL,
+	cod_manag int4 NULL,
+	CONSTRAINT lavoratori_pkey PRIMARY KEY (id_lav),
+	CONSTRAINT lavoratori_id_az_fkey FOREIGN KEY (id_az) REFERENCES tabelle_gestionale.aziende(id_az),
+	CONSTRAINT lavoratori_id_bu_fkey FOREIGN KEY (id_bu) REFERENCES tabelle_gestionale.bu(id_bu)
+);
+
+CREATE TABLE tabelle_gestionale.lav_comm (
+	id_seq serial4 NOT NULL,
+	id_comm int4 NOT NULL,
+	id_lav int4 NOT NULL,
+	CONSTRAINT lav_comm_pkey PRIMARY KEY (id_seq),
+	CONSTRAINT lav_comm_id_comm_fkey FOREIGN KEY (id_comm) REFERENCES tabelle_gestionale.commesse(id_comm),
+	CONSTRAINT lav_comm_id_lav_fkey FOREIGN KEY (id_lav) REFERENCES tabelle_gestionale.lavoratori(id_lav)
+);
+
+                                            INSERIMENTO DATI NELLE TABELLE IN POSTGRES
+
+INSERT INTO tabelle_gestionale.aziende (ragione_sociale, citta, indirizzo, p_iva)
+VALUES
+    ('Azienda Uno', 'Città Uno', 'Via Uno, 1', '12345678901'),
+    ('Azienda Uno', 'Città Due', 'Via Due, 2', '98765432109'),
+    ('Azienda Tre', 'Città Tre', 'Via Tre, 3', '45678901234'),
+    ('Azienda Uno', 'Città Quattro', 'Via Quattro, 4', '56789012345'),
+    ('Azienda Cinque', 'Città Cinque', 'Via Cinque, 5', '67890123456');
+
+INSERT INTO tabelle_gestionale.bu (nome, cod_resp)
+VALUES
+    ('Business Unit 1', 101),
+    ('Business Unit 2', 102),
+    ('Business Unit 3', 103),
+    ('Business Unit 4', 104),
+    ('Business Unit 5', 105);
+
+INSERT INTO tabelle_gestionale.commesse (nome_prog, committente)
+VALUES
+    ('Progetto 1', 'Cliente Uno'),
+    ('Progetto 2', 'Cliente Due'),
+    ('Progetto 3', 'Cliente Tre'),
+    ('Progetto 4', 'Cliente Quattro'),
+    ('Progetto 5', 'Cliente Cinque');
+
+INSERT INTO tabelle_gestionale.lavoratori (cognome, nome, id_az, id_bu, cod_fisc, data_assunzione, data_fine, cod_tl, cod_manag)
+VALUES
+    ('Rossi', 'Mario', 1, 1, 'RSSMRA80A01H501K', '2022-01-01', NULL, 201, 301),
+    ('Verdi', 'Luigi', 2, 1, 'VRDLGU85B02D612J', '2022-02-15', NULL, 202, 302),
+    ('Bianchi', 'Anna', 1, 2, 'BNCHAN75C45G831L', '2021-10-10', '2023-05-31', 203, 303),
+    ('Neri', 'Elena', 3, NULL, 'NRILEN90A41H501Z', '2023-03-20', NULL, 204, 304),
+    ('Gialli', 'Roberto', 5, 3, 'GLLRTB78D12H345N', '2023-07-01', NULL, 205, 305);
+
+INSERT INTO tabelle_gestionale.lav_comm (id_comm, id_lav)
+VALUES
+    (1, 1),
+    (2, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5),
+    (1, 5),
+    (3, 2),
+    (4, 3);
+
+Una volta eseguite tutte queste operazioni, il db è pronto.
+
+Dopo aver fatto ciò, modifica il file di configurazione di Spring Boot "application.yml" presente nel progetto, sostituendo
+"nome_database", "postgres" e "pgadmin" con il nome del tuo database, il nome utente e la password che hai usato
+per creare il database, rispettivamente.
+In poche parole, nel file citato sopra, bisogna variare questi campi che io ho lasciato invariati di default:
+
+url: jdbc:postgresql://localhost:5432/test_gestionale (QUESTO E' IL NOME DEL DB)
+username: postgres
+password: pgadmin
+
+Una volta configurato correttamente, Spring Boot utilizzerà queste credenziali per connettersi al database PostgreSQL quando avvii il tuo programma.
+
+CONSIGLIO: Configura la connessione al tuo database PostgreSQL tramite l'IDE.
+Questo ti permetterà di eseguire e testare il tuo programma direttamente dall'IDE, interagendo con il database.
+
+Arrivato a questo punto, basta semplicemente aprire il programma scaricato con l'IDE che preferite (io ho usato Intellij) ed eseguire la classe
+TestGestionaleApplication
+
+Andate su http://localhost:8080/ e il gioco è fatto!

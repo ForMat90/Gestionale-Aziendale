@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestionale Lavoratori</title>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"> </script>
+</head>
+<body style="max-width: 960px; margin: 16px auto; padding: 16px">
+<h3>Aggiorna lavoratore</h3>
+<form th:action="@{/createLavoratore}" th:object="${lavoratore}" method="post">
+  <input type="hidden" th:field="*{idLav}" />
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="cognome" type="text" class="validate" th:field="*{cognome}">
+      <label for="cognome">Cognome</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="nome" type="text" class="validate" th:field="*{nome}">
+      <label for="nome">Nome</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="aziende" type="number" class="validate" th:field="*{aziende}">
+      <label for="aziende">Id Azienda</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="bu" type="number" class="validate" th:field="*{bu}">
+      <label for="bu">Id Busines Unit</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="codFisc" type="text" class="validate" th:field="*{codFisc}">
+      <label for="codFisc">Codice Fiscale</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="dataAssunzione" type="date" class="form-control" name="dataAssunzione" th:value="${#dates.format(lavoratore.dataAssunzione, 'yyyy-MM-dd')}" />
+      <label for="dataAssunzione">Data Assunzione</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="dataFine" type="date" class="form-control" name="dataFine" th:value="${#dates.format(lavoratore.dataFine, 'yyyy-MM-dd')}">
+      <label for="dataFine">Data Fine Lavoro</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="codTl" type="number" class="validate" th:field="*{codTl}">
+      <label for="codTl">Codice Team Leader</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="codManag" type="number" class="validate" th:field="*{codManag}">
+      <label for="codManag">Codice Manager</label>
+    </div>
+  </div>
+  <button type="submit" class="waves-effect waves-light btn">Aggiorna Lavoratore</button>
+  </div>
+</form>
+<br>
+
+<a th:href="@{/}"
+   class="blue-text">Indietro</a>
+</body>
+</html>

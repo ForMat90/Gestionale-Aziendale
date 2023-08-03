@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.gestionale.testGestionale.TestGestionaleApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.283 s - in com.gestionale.testGestionale.TestGestionaleApplicationTests

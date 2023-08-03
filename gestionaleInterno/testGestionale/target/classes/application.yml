@@ -1,0 +1,15 @@
+spring:
+  # ========= DATABASE POSTGRESS =========== #
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/test_gestionale
+    username: postgres
+    password: pgadmin
+    driver-class-name: org.postgresql.Driver
+jpa:
+  hibernate:
+      ddl-auto: validate
+  properties:
+    hibernate:
+      show_sql: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
