@@ -1,6 +1,9 @@
 # Gestionale-Aziendale
 
+IMPORTANTE: nella cartella db_gestionale, è presente il file DB.txt dove ci sono tutti i passi da seguire per avere un piccolo Database per poter utilizzare il programma.  
+
 Il progetto rappresenta un'applicazione web di gestione del personale, che consente di tenere traccia delle informazioni dei lavoratori, delle aziende e delle unità di business, facilitando il monitoraggio e la gestione delle risorse umane all'interno dell'azienda.
+
 
 In questo progetto possiamo: 
 
@@ -11,6 +14,7 @@ Filtrare per azienda: L'applicazione permette di filtrare i lavoratori in base a
 Aggiungere nuovi lavoratori: L'applicazione fornisce un pulsante per aggiungere nuovi lavoratori al sistema. Cliccando su questo pulsante, l'utente può inserire i dettagli del nuovo lavoratore, come nome, cognome, codice fiscale, data di assunzione, azienda di appartenenza, unità di business, team leader e manager.
 
 Aggiornare e cancellare lavoratori: L'applicazione permette di aggiornare e cancellare i dati di un lavoratore esistente. Cliccando sui pulsanti "Aggiorna" o "Cancella" associati a ciascun lavoratore nella tabella, l'utente può modificare i dati del lavoratore o eliminarlo dal sistema.
+
 
 Le tecnologie utilizzate sono:
 
